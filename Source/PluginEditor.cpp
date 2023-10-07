@@ -55,23 +55,32 @@ BossGreatAudioProcessorEditor::WaveformDisplay::~WaveformDisplay()
 void BossGreatAudioProcessorEditor::WaveformDisplay::paint(juce::Graphics& g)
 {
     juce::AudioBuffer<float>& buffer = audioProcessor.getSample(0);
-    juce::AudioBuffer<float> scaledBuffer;
-    scaledBuffer.setSize(2, getWidth());
-    int sampleToPixelRatio = buffer.getNumSamples() / getWidth();
-    for (int sampleIndex = 0; sampleIndex < getWidth(); sampleIndex++)
+    if (buffer.getNumChannels() > 0 && buffer.getNumSamples() > 0)
     {
-        for (int channelIndex = 0; channelIndex < scaledBuffer.getNumChannels(); channelIndex++)
+        g.setColour(juce::Colours::white);
+        float sampleChunkSize = buffer.getNumSamples() / static_cast<float>(getWidth());
+        int roundedChunkBorderLoewerIndex = 0;
+        for (int pixelIndex = 0; pixelIndex < getWidth(); pixelIndex++)
         {
-            scaledBuffer.setSample(channelIndex, sampleIndex, channelIndex < buffer.getNumChannels() ? buffer.getSample(channelIndex, sampleIndex * sampleToPixelRatio) : 0.f);
+            int roundedChunkBorderUpperIndex = static_cast<int>(std::round(sampleChunkSize * (pixelIndex + 1)));
+            float minValue = buffer.getSample(0, roundedChunkBorderLoewerIndex);
+            float maxValue = minValue;
+            for (int sampleIndex = roundedChunkBorderLoewerIndex + 1; sampleIndex < roundedChunkBorderUpperIndex; sampleIndex++)
+            {
+                float sampleValue = buffer.getSample(0, sampleIndex);
+                if (sampleValue < minValue)
+                {
+                    minValue = sampleValue;
+                }
+                if (sampleValue > maxValue)
+                {
+                    maxValue = sampleValue;
+                }
+            }
+            roundedChunkBorderLoewerIndex = roundedChunkBorderUpperIndex;
+            float minY = juce::jmap<float>(minValue, -1.f, 1.f, getHeight(), 0.f);
+            float maxY = juce::jmap<float>(maxValue, -1.f, 1.f, getHeight(), 0.f);
+            g.drawLine(pixelIndex, maxY, pixelIndex, minY);
         }
     }
-    juce::Path path;
-    int halfHeight = getHeight() / 2;
-    path.startNewSubPath(0, halfHeight);
-    for (int i = 0; i < scaledBuffer.getNumSamples(); i++)
-    {
-        path.lineTo(i, juce::jmap<float>(scaledBuffer.getSample(0, i), -1.f, 1.f, getHeight(), 0)); // It only does the left channel for now (channel index: 0)
-    }
-    g.setColour(juce::Colours::white);
-    g.strokePath(path, juce::PathStrokeType(1.f));
 }

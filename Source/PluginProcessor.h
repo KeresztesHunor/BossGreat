@@ -52,7 +52,7 @@ public:
 
 private:
 
-    static const int numSamplesToStore { 16 };
+    static const int numSamplesToStore = 16;
     int numSamplesToRecord { 44100 };
     int recordingBufferSampleIndex;
 
@@ -60,7 +60,7 @@ private:
 
     bool recordModeIsOn;
 
-    SamplePanel& selectedSamplePanel;
+    SamplePanel* selectedSamplePanel;
     SamplePanel samplePanels[numSamplesToStore];
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessor)

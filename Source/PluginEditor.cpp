@@ -1,18 +1,46 @@
+#include "MainColours.h"
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProcessor& p) : AudioProcessorEditor(&p), audioProcessor(p), waveformDisplay(p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (512, 288);
-    toggleRecordModeButton.setName("toggleRecordModeButton");
+    // Set plugin size
+
+    setSize (640, 360);
+
+    // Get half the width of the plugin window
+
+    const int halfWidth = getWidth() / 2;
+
+    // Create the samples panel
+
+    samplesPanel.setBounds(0, 0, halfWidth, getHeight());
+    addAndMakeVisible(samplesPanel);
+
+    // Create the controls panel
+
+    controlsPanel.setBounds(halfWidth, 0, getWidth() - halfWidth, getHeight());
+    addAndMakeVisible(controlsPanel);
+
+    // Create a text button on the controls panel
+
     toggleRecordModeButton.setBounds(8, 8, 128, 16);
     setRecordButtonText();
-    addAndMakeVisible(toggleRecordModeButton);
+    controlsPanel.addAndMakeVisible(toggleRecordModeButton);
     toggleRecordModeButton.onClick = [&]() {
         audioProcessor.toggleRecordMode();
     };
+
+    // Create the waveform display
+
+    waveformDisplay.setBounds(0, 0, samplesPanel.getWidth(), samplesPanel.getHeight());
+    samplesPanel.addAndMakeVisible(waveformDisplay);
+    audioProcessor.recordingBufferUpdatedEvent = [&]() {
+        waveformDisplay.repaint();
+    };
+
+    //
+
     audioProcessor.recordModeStateChangedEvent = [&]() {
         setRecordButtonText();
         if (!audioProcessor.getRecordModeIsOn())
@@ -20,11 +48,6 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
             audioProcessor.getSelectedSamplePanel().processBuffers();
             waveformDisplay.repaint();
         }
-    };
-    waveformDisplay.setBounds(0, 32, getWidth(), getHeight() - 32);
-    addAndMakeVisible(waveformDisplay);
-    audioProcessor.recordingBufferUpdatedEvent = [&]() {
-        waveformDisplay.repaint();
     };
 }
 
@@ -38,18 +61,16 @@ BossGreatAudioProcessorEditor::~BossGreatAudioProcessorEditor()
 
 void BossGreatAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll(juce::Colours::black);
+    g.fillAll(MainColours::colour1);
 }
 
 void BossGreatAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    
 }
 
 void BossGreatAudioProcessorEditor::setRecordButtonText()
 {
-    std::string state = audioProcessor.getRecordModeIsOn() ? "on" : "off";
+    const std::string state = audioProcessor.getRecordModeIsOn() ? "on" : "off";
     toggleRecordModeButton.setButtonText("Record mode: " + state);
 }

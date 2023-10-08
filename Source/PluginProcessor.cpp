@@ -10,9 +10,10 @@ BossGreatAudioProcessor::BossGreatAudioProcessor()
                     #endif
                      .withOutput("Output", juce::AudioChannelSet::stereo(), true)
                    #endif
-                    ), selectedSamplePanel(samplePanels[0])
+                    )
 #endif
 {
+    selectedSamplePanel = &samplePanels[0];
     recordingBufferSampleIndex = 0;
     recordModeIsOn = false;
     for (int i = 0; i < numSamplesToStore; i++)
@@ -163,20 +164,20 @@ void BossGreatAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juc
     {
         if (getPlayHead() != nullptr)
         {
-            juce::Optional<juce::AudioPlayHead::PositionInfo>& position = getPlayHead()->getPosition();
+            const juce::Optional<juce::AudioPlayHead::PositionInfo>& position = getPlayHead()->getPosition();
             if (position.hasValue() && position->getIsPlaying())
             {
                 int sampleIndex = 0;
                 while (sampleIndex < buffer.getNumSamples() && recordingBufferSampleIndex < numSamplesToRecord)
                 {
-                    for (int channelIndex = 0; channelIndex < selectedSamplePanel.getSampleBuffer().getNumChannels(); channelIndex++)
+                    for (int channelIndex = 0; channelIndex < selectedSamplePanel->getSampleBuffer().getNumChannels(); channelIndex++)
                     {
-                        selectedSamplePanel.getSampleBuffer().setSample(channelIndex, recordingBufferSampleIndex, channelIndex < buffer.getNumChannels() ? buffer.getSample(channelIndex, sampleIndex) : 0.f);
+                        selectedSamplePanel->getSampleBuffer().setSample(channelIndex, recordingBufferSampleIndex, channelIndex < buffer.getNumChannels() ? buffer.getSample(channelIndex, sampleIndex) : 0.f);
                     }
                     sampleIndex++;
                     recordingBufferSampleIndex++;
                 }
-                selectedSamplePanel.setProcessedSampleBuffer();
+                selectedSamplePanel->setProcessedSampleBuffer();
                 recordingBufferUpdatedEvent();
                 if (recordingBufferSampleIndex >= numSamplesToRecord)
                 {
@@ -223,20 +224,20 @@ void BossGreatAudioProcessor::toggleRecordMode()
     recordModeIsOn = !recordModeIsOn;
     if (recordModeIsOn)
     {
-        int previousNumSamplesInRecordingBuffer = selectedSamplePanel.getSampleBuffer().getNumSamples();
+        const int previousNumSamplesInRecordingBuffer = selectedSamplePanel->getSampleBuffer().getNumSamples();
         numSamplesToRecord = static_cast<int>(sampleRate); // Currently only 1 second of audio
-        selectedSamplePanel.getSampleBuffer().setSize(2, numSamplesToRecord, true);
+        selectedSamplePanel->getSampleBuffer().setSize(2, numSamplesToRecord, true);
         if (previousNumSamplesInRecordingBuffer < numSamplesToRecord)
         {
-            for (int channelIndex = 0; channelIndex < selectedSamplePanel.getSampleBuffer().getNumChannels(); channelIndex++)
+            for (int channelIndex = 0; channelIndex < selectedSamplePanel->getSampleBuffer().getNumChannels(); channelIndex++)
             {
                 for (int sampleIndex = previousNumSamplesInRecordingBuffer; sampleIndex < numSamplesToRecord; sampleIndex++)
                 {
-                    selectedSamplePanel.getSampleBuffer().setSample(channelIndex, sampleIndex, 0.f);
+                    selectedSamplePanel->getSampleBuffer().setSample(channelIndex, sampleIndex, 0.f);
                 }
             }
         }
-        selectedSamplePanel.setProcessedSampleBuffer();
+        selectedSamplePanel->setProcessedSampleBuffer();
         recordingBufferUpdatedEvent();
     }
     else
@@ -248,7 +249,7 @@ void BossGreatAudioProcessor::toggleRecordMode()
 
 void BossGreatAudioProcessor::selectSamplePanel(int samplePanelIndex)
 {
-    selectedSamplePanel = samplePanels[samplePanelIndex];
+    selectedSamplePanel = &samplePanels[samplePanelIndex];
 }
 
 bool BossGreatAudioProcessor::getRecordModeIsOn()
@@ -258,5 +259,5 @@ bool BossGreatAudioProcessor::getRecordModeIsOn()
 
 SamplePanel& BossGreatAudioProcessor::getSelectedSamplePanel()
 {
-    return selectedSamplePanel;
+    return *selectedSamplePanel;
 }

@@ -1,6 +1,7 @@
+#include "MainColours.h"
 #include "WaveFormDisplay.h"
 
-WaveFormDisplay::WaveFormDisplay(BossGreatAudioProcessor& p) : juce::Component("Waveform display"), audioProcessor(p)
+WaveFormDisplay::WaveFormDisplay(BossGreatAudioProcessor& p) : juce::Component(), audioProcessor(p)
 {
 
 }
@@ -10,8 +11,9 @@ WaveFormDisplay::~WaveFormDisplay()
 
 }
 
-void WaveFormDisplay::paint (juce::Graphics& g)
+void WaveFormDisplay::paint(juce::Graphics& g)
 {
+    g.fillAll(MainColours::colour2);
     g.setColour(juce::Colours::white);
     juce::AudioBuffer<float>& buffer = audioProcessor.getSelectedSamplePanel().getProcessedSampleBuffer();
     if (buffer.getNumChannels() > 0 && buffer.getNumSamples() > 0)

@@ -22,4 +22,6 @@ private:
 	void removeSilence(juce::AudioBuffer<float>&);
 
 	bool silenceOnAllChannels(juce::AudioBuffer<float>&, int);
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SamplePanel)
 };

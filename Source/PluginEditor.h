@@ -3,6 +3,8 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "WaveFormDisplay.h"
+#include "SamplesPanel.h"
+#include "ControlsPanel.h"
 
 class BossGreatAudioProcessorEditor : public juce::AudioProcessorEditor
 {
@@ -17,10 +19,10 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     BossGreatAudioProcessor& audioProcessor;
-
-    juce::TextButton toggleRecordModeButton;
-
     WaveFormDisplay waveformDisplay;
+    SamplesPanel samplesPanel;
+    ControlsPanel controlsPanel;
+    juce::TextButton toggleRecordModeButton;
 
     void setRecordButtonText();
 

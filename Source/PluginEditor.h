@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "WaveFormDisplay.h"
 
 class BossGreatAudioProcessorEditor : public juce::AudioProcessorEditor
 {
@@ -13,25 +14,15 @@ public:
     void resized() override;
 
 private:
-    class WaveformDisplay : public juce::Component
-    {
-    public:
-        WaveformDisplay(BossGreatAudioProcessor& audioProcessor);
-        ~WaveformDisplay();
-
-        void paint(juce::Graphics& g) override;
-
-    private:
-        BossGreatAudioProcessor& audioProcessor;
-    };
-
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     BossGreatAudioProcessor& audioProcessor;
 
     juce::TextButton toggleRecordModeButton;
 
-    WaveformDisplay waveformDisplay;
+    WaveFormDisplay waveformDisplay;
+
+    void setRecordButtonText();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessorEditor)
 };

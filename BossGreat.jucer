@@ -7,8 +7,12 @@
               pluginAUMainType="'aumf'" pluginVSTCategory="kPlugCategEffect">
   <MAINGROUP id="L9V8Fl" name="BossGreat">
     <GROUP id="{13C397FF-2D7B-FF8B-9A34-9C8A61854DA8}" name="Source">
-      <FILE id="iAdawS" name="SamplePanel.cpp" compile="1" resource="0" file="Source/SamplePanel.cpp"/>
-      <FILE id="GJ4R6C" name="SamplePanel.h" compile="0" resource="0" file="Source/SamplePanel.h"/>
+      <FILE id="BRH5wd" name="SamplePanel.cpp" compile="1" resource="0" file="Source/SamplePanel.cpp"/>
+      <FILE id="wLECEN" name="SamplePanel.h" compile="0" resource="0" file="Source/SamplePanel.h"/>
+      <FILE id="QPLD2A" name="WaveFormDisplay.cpp" compile="1" resource="0"
+            file="Source/WaveFormDisplay.cpp"/>
+      <FILE id="Z4bPFa" name="WaveFormDisplay.h" compile="0" resource="0"
+            file="Source/WaveFormDisplay.h"/>
       <FILE id="bB7tN0" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="qFgkYs" name="PluginProcessor.h" compile="0" resource="0"

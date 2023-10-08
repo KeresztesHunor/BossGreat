@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "SamplePanel.h"
 
 class BossGreatAudioProcessor : public juce::AudioProcessor
                              #if JucePlugin_Enable_ARA
@@ -43,23 +44,24 @@ public:
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     void toggleRecordMode();
+    void selectSamplePanel(int samplePanelIndex);
 
     bool getRecordModeIsOn();
 
-    juce::AudioBuffer<float>& getSample(int samplePanelIndex);
+    SamplePanel& getSelectedSamplePanel();
 
 private:
 
     static const int numSamplesToStore { 16 };
     int numSamplesToRecord { 44100 };
-    int selectedSamplePanelIndex;
     int recordingBufferSampleIndex;
 
     double sampleRate { 44100 };
 
     bool recordModeIsOn;
 
-    juce::AudioBuffer<float> samples[numSamplesToStore];
+    SamplePanel& selectedSamplePanel;
+    SamplePanel samplePanels[numSamplesToStore];
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessor)
 };

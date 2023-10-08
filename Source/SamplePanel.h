@@ -10,6 +10,7 @@ public:
 
 	void clear();
 	void setProcessedSampleBuffer();
+	void processBuffers();
 
 	juce::AudioBuffer<float>& getSampleBuffer();
 	juce::AudioBuffer<float>& getProcessedSampleBuffer();
@@ -17,4 +18,8 @@ public:
 private:
 	juce::AudioBuffer<float> sampleBuffer;
 	juce::AudioBuffer<float> processedSampleBuffer;
+
+	void removeSilence(juce::AudioBuffer<float>&);
+
+	bool silenceOnAllChannels(juce::AudioBuffer<float>&, int);
 };

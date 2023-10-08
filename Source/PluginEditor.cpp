@@ -17,7 +17,7 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
         setRecordButtonText();
         if (!audioProcessor.getRecordModeIsOn())
         {
-            // Process recording buffer
+            audioProcessor.getSelectedSamplePanel().processBuffers();
             waveformDisplay.repaint();
         }
     };
@@ -30,7 +30,10 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
 BossGreatAudioProcessorEditor::~BossGreatAudioProcessorEditor()
 {
-
+    if (audioProcessor.getRecordModeIsOn())
+    {
+        audioProcessor.toggleRecordMode();
+    }
 }
 
 void BossGreatAudioProcessorEditor::paint(juce::Graphics& g)

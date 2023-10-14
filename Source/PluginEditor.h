@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "SamplesPanel.h"
-#include "SampleSelectionButtons.h"
+#include "SampleSelectionButtonsView.h"
 #include "WaveFormDisplay.h"
 #include "SpectrumView.h"
 #include "ControlsPanel.h"
@@ -24,13 +24,15 @@ private:
     // access the processor object that created it.
     BossGreatAudioProcessor& audioProcessor;
     SamplesPanel samplesPanel;
-    SampleSelectionButtons sampleSelectionButtons;
+    SampleSelectionButtonsView sampleSelectionButtonsView;
+    juce::DrawableButton* sampleSelectionButtons[BossGreatAudioProcessor::numSamplesToStore];
     WaveFormDisplay waveformDisplay;
     SpectrumView spectrumView;
     ControlsPanel controlsPanel;
     juce::TextButton toggleRecordModeButton;
     
     void setRecordButtonText();
+    void initSampleSelectionButton(int);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessorEditor)
 };

@@ -46,7 +46,7 @@ void WaveFormDisplay::paint(juce::Graphics& g)
     }
     else
     {
-        int halfHeinght = getHeightWithoutBorder() / 2;
+        float halfHeinght = getHeightWithoutBorder() / 2.f;
         g.drawLine(0, halfHeinght, getWidthWithoutBorder(), halfHeinght);
     }
 }

@@ -9,6 +9,8 @@ class BossGreatAudioProcessor : public juce::AudioProcessor
                              #endif
 {
 public:
+    static const int numSamplesToStore = 16;
+
     std::function<void()> recordModeStateChangedEvent;
     std::function<void()> recordingBufferUpdatedEvent;
 
@@ -51,8 +53,6 @@ public:
     SamplePanel& getSelectedSamplePanel();
 
 private:
-
-    static const int numSamplesToStore = 16;
     int numSamplesToRecord { 44100 };
     int recordingBufferSampleIndex;
 

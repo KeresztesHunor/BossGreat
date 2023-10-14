@@ -8,18 +8,43 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
     setSize (640, 360);
 
-    // Get half the width of the plugin window
+    //
 
     const int halfWidth = getWidth() / 2;
-
+    
     // Create the samples panel
 
-    samplesPanel.setBounds(0, 0, halfWidth, getHeight());
+    samplesPanel.setBounds(padding, padding, halfWidth - padding, getHeight() - padding * 2);
+
+    //
+
+    const int samplesPanelSegmentHeight = samplesPanel.getHeightWithoutBorder() / (SampleSelectionButtons::gridTemplateRowFr + WaveFormDisplay::gridTemplateRowFr + SpectrumView::gridTemplateRowFr);
+
+    // Create the sample selection buttons panel
+
+    sampleSelectionButtons.setBounds(samplesPanel.getBorderThickness(), samplesPanel.getBorderThickness(), samplesPanel.getWidthWithoutBorder(), samplesPanelSegmentHeight * SampleSelectionButtons::gridTemplateRowFr);
+    samplesPanel.addAndMakeVisible(sampleSelectionButtons);
+
+    // Create the sample selection buttons
+
+    // Create the waveform display
+
+    waveformDisplay.setBounds(samplesPanel.getBorderThickness(), samplesPanel.getBorderThickness() + sampleSelectionButtons.getHeight(), samplesPanel.getWidthWithoutBorder(), samplesPanelSegmentHeight * WaveFormDisplay::gridTemplateRowFr);
+    samplesPanel.addAndMakeVisible(waveformDisplay);
+    audioProcessor.recordingBufferUpdatedEvent = [&]() {
+        waveformDisplay.repaint();
+    };
     addAndMakeVisible(samplesPanel);
+
+    // Create the spectrum view panel
+
+    const int spectrumViewYPos = sampleSelectionButtons.getHeight() + waveformDisplay.getHeight();
+    spectrumView.setBounds(samplesPanel.getBorderThickness(), samplesPanel.getBorderThickness() + spectrumViewYPos, samplesPanel.getWidthWithoutBorder(), samplesPanel.getHeightWithoutBorder() - spectrumViewYPos);
+    samplesPanel.addAndMakeVisible(spectrumView);
 
     // Create the controls panel
 
-    controlsPanel.setBounds(halfWidth, 0, getWidth() - halfWidth, getHeight());
+    controlsPanel.setBounds(halfWidth, padding, getWidth() - halfWidth - padding, getHeight() - padding * 2);
     addAndMakeVisible(controlsPanel);
 
     // Create a text button on the controls panel
@@ -29,14 +54,6 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
     controlsPanel.addAndMakeVisible(toggleRecordModeButton);
     toggleRecordModeButton.onClick = [&]() {
         audioProcessor.toggleRecordMode();
-    };
-
-    // Create the waveform display
-
-    waveformDisplay.setBounds(0, 0, samplesPanel.getWidth(), samplesPanel.getHeight());
-    samplesPanel.addAndMakeVisible(waveformDisplay);
-    audioProcessor.recordingBufferUpdatedEvent = [&]() {
-        waveformDisplay.repaint();
     };
 
     //
@@ -61,7 +78,7 @@ BossGreatAudioProcessorEditor::~BossGreatAudioProcessorEditor()
 
 void BossGreatAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(MainColours::colour1);
+    g.fillAll(MainColours::colour1darker);
 }
 
 void BossGreatAudioProcessorEditor::resized()

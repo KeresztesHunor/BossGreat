@@ -1,8 +1,9 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "BorderedComponent.h"
 
-class ControlsPanel : public juce::Component
+class ControlsPanel : public BorderedComponent
 {
 public:
     ControlsPanel();

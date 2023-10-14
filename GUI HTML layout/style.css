@@ -1,0 +1,122 @@
+:root {
+    /* Color 1 */
+
+    --color1Lighter: #A5B586;
+    --color1Light: #7F8F5E;
+
+    --color1: #54603B;
+
+    --color1Dark: #445523;
+    --color1Darker: #324211;
+
+    /* Color 2 */
+
+    --color2Lighter: #3C5C5C;
+    --color2Light: #567474;
+
+    --color2: #263E3E;
+
+    --color2Dark: #173636;
+    --color2Darker: #0B2A2A;
+
+    /* Color 3 */
+
+    --color3Lighter: #9A9165;
+    --color3Light: #C2B98F;
+
+    --color3: #676040;
+
+    --color3Dark: #5B5226;
+    --color3Darker: #473E12;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    background-color: gray;
+}
+
+footer {
+    text-align: center;
+    padding: 16px;
+}
+
+header > h1 {
+    text-align: center;
+}
+
+article div {
+    border: 1px solid white;
+}
+
+article > div {
+    width: 640px;
+    height: 360px;
+    margin: auto;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    background-color: var(--color1Darker);
+}
+
+article > div > div {
+    width: 100%;
+    height: 100%;
+}
+
+#samples-panel {
+    display: grid;
+    grid-template-rows: 1fr 3fr 5fr;
+}
+
+#sample-selection-buttons {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    border: none;
+}
+
+#sample-selection-buttons > div {
+    text-align: center;
+    font-size: 12px;
+    background-color: var(--color1);
+}
+
+#sample-selection-buttons > .active {
+    background-color: var(--color1Light);
+}
+
+#waveform-display {
+    background-color: var(--color2);
+}
+
+#spectrum-view {
+    background-color: black;
+}
+
+#controls-panel {
+    background-color: var(--color1);
+}
+
+#toggle-record-mode-button {
+    width: 32px;
+    aspect-ratio: 1 / 1;
+    margin: 3px;
+    border-radius: 50%;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.5), black);
+}
+
+#toggle-record-mode-button[class=active] {
+    background-image: radial-gradient(white, hsl(0, 100%, 75%));
+}
+
+#toggle-record-mode-button > svg {
+    display: block;
+}
+
+#toggle-record-mode-button > svg > circle {
+    fill: red;
+}

@@ -1,11 +1,14 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "BorderedComponent.h"
 #include "PluginProcessor.h"
 
-class WaveFormDisplay : public juce::Component
+class WaveFormDisplay : public BorderedComponent
 {
 public:
+    static const int gridTemplateRowFr { 3 };
+
     WaveFormDisplay(BossGreatAudioProcessor&);
     ~WaveFormDisplay() override;
 

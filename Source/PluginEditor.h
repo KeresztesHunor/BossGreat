@@ -2,13 +2,17 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "WaveFormDisplay.h"
 #include "SamplesPanel.h"
+#include "SampleSelectionButtons.h"
+#include "WaveFormDisplay.h"
+#include "SpectrumView.h"
 #include "ControlsPanel.h"
 
 class BossGreatAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
+    static const int padding { 8 };
+
     BossGreatAudioProcessorEditor(BossGreatAudioProcessor&);
     ~BossGreatAudioProcessorEditor() override;
 
@@ -19,11 +23,13 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     BossGreatAudioProcessor& audioProcessor;
-    WaveFormDisplay waveformDisplay;
     SamplesPanel samplesPanel;
+    SampleSelectionButtons sampleSelectionButtons;
+    WaveFormDisplay waveformDisplay;
+    SpectrumView spectrumView;
     ControlsPanel controlsPanel;
     juce::TextButton toggleRecordModeButton;
-
+    
     void setRecordButtonText();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessorEditor)

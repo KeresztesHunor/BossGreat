@@ -7,6 +7,17 @@
               pluginAUMainType="'aumf'" pluginVSTCategory="kPlugCategEffect">
   <MAINGROUP id="L9V8Fl" name="BossGreat">
     <GROUP id="{13C397FF-2D7B-FF8B-9A34-9C8A61854DA8}" name="Source">
+      <FILE id="dx8OZK" name="SpectrumView.cpp" compile="1" resource="0"
+            file="Source/SpectrumView.cpp"/>
+      <FILE id="QuhcQZ" name="SpectrumView.h" compile="0" resource="0" file="Source/SpectrumView.h"/>
+      <FILE id="j7lz5z" name="BorderedComponent.cpp" compile="1" resource="0"
+            file="Source/BorderedComponent.cpp"/>
+      <FILE id="QkCgJL" name="BorderedComponent.h" compile="0" resource="0"
+            file="Source/BorderedComponent.h"/>
+      <FILE id="TMcofK" name="SampleSelectionButtons.cpp" compile="1" resource="0"
+            file="Source/SampleSelectionButtons.cpp"/>
+      <FILE id="xJKrA6" name="SampleSelectionButtons.h" compile="0" resource="0"
+            file="Source/SampleSelectionButtons.h"/>
       <FILE id="rQvxN5" name="MainColours.h" compile="0" resource="0" file="Source/MainColours.h"/>
       <FILE id="KfzAkf" name="ControlsPanel.cpp" compile="1" resource="0"
             file="Source/ControlsPanel.cpp"/>

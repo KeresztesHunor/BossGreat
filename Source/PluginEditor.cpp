@@ -10,13 +10,12 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
     //
 
-    const int halfWidth = getWidth() / 2;
     const int halfOfNumSamplesToStore = BossGreatAudioProcessor::numSamplesToStore / 2;
     const int totalPaddingThickness = padding * 2;
     
     // Create the samples panel
 
-    int samplesPanelWidth = halfWidth - padding;
+    int samplesPanelWidth = getWidth() / 2 - padding;
     const int samplesPanelWidthDivisionRemainder = (samplesPanelWidth - samplesPanel.getBorderThickness() * 2) % halfOfNumSamplesToStore;
     if (samplesPanelWidthDivisionRemainder > 0)
     {
@@ -43,15 +42,16 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
     const int buttonWidth = sampleSelectionButtonsView.getWidth() / halfOfNumSamplesToStore;
     const int buttonHeight = sampleSelectionButtonsView.getHeight() / 2;
-    juce::DrawableRectangle sampleSelectionButtonDrawable;
-    sampleSelectionButtonDrawable.setRectangle(juce::Parallelogram<float>(juce::Rectangle<float>(buttonWidth, buttonHeight)));
-    sampleSelectionButtonDrawable.setFill(juce::FillType(MainColours::colour1));
-    sampleSelectionButtonDrawable.setStrokeFill(juce::FillType(juce::Colours::white));
-    sampleSelectionButtonDrawable.setStrokeThickness(1.f);
+    juce::DrawableRectangle normalImage;
+    initDrawableRectangleForSampleSelectionButton(normalImage, MainColours::colour1, buttonWidth, buttonHeight);
+    juce::DrawableRectangle overImage;
+    initDrawableRectangleForSampleSelectionButton(overImage, MainColours::colour1light, buttonWidth, buttonHeight);
+    juce::DrawableRectangle downImage;
+    initDrawableRectangleForSampleSelectionButton(downImage, MainColours::colour1lighter, buttonWidth, buttonHeight);
     for (int i = 0; i < halfOfNumSamplesToStore; i++)
     {
-        initSampleSelectionButton(i, halfOfNumSamplesToStore, buttonWidth, buttonHeight, &sampleSelectionButtonDrawable);
-        initSampleSelectionButton(i + halfOfNumSamplesToStore, halfOfNumSamplesToStore, buttonWidth, buttonHeight, &sampleSelectionButtonDrawable);
+        initSampleSelectionButton(i, halfOfNumSamplesToStore, buttonWidth, buttonHeight, &normalImage, &overImage, &downImage);
+        initSampleSelectionButton(i + halfOfNumSamplesToStore, halfOfNumSamplesToStore, buttonWidth, buttonHeight, &normalImage, &overImage, &downImage);
     }
 
     // Create the waveform display
@@ -128,11 +128,19 @@ void BossGreatAudioProcessorEditor::setRecordButtonText()
     toggleRecordModeButton.setButtonText("Record mode: " + state);
 }
 
-void BossGreatAudioProcessorEditor::initSampleSelectionButton(int index, int halfOfNumSamplesToStore, int buttonWidth, int buttonHeight, juce::DrawableRectangle* sampleSelectionButtonDrawable)
+void BossGreatAudioProcessorEditor::initDrawableRectangleForSampleSelectionButton(juce::DrawableRectangle& drawable, juce::Colour colour, int buttonWidth, int buttonHeight)
 {
-    sampleSelectionButtons[index] = new juce::DrawableButton("Sample selection button " + static_cast<juce::String>(index), juce::DrawableButton::ButtonStyle::ImageRaw);
+    drawable.setRectangle(juce::Parallelogram<float>(juce::Rectangle<float>(buttonWidth, buttonHeight)));
+    drawable.setFill(juce::FillType(colour));
+    drawable.setStrokeFill(juce::FillType(juce::Colours::white));
+    drawable.setStrokeThickness(1.f);
+}
+
+void BossGreatAudioProcessorEditor::initSampleSelectionButton(int index, int halfOfNumSamplesToStore, int buttonWidth, int buttonHeight, juce::DrawableRectangle* normalImage, juce::DrawableRectangle* overImage, juce::DrawableRectangle* downImage)
+{
+    sampleSelectionButtons[index] = new juce::DrawableButton("Sample selection button " + static_cast<juce::String>(index), juce::DrawableButton::ButtonStyle::ImageStretched);
     juce::DrawableButton& currentButton = *sampleSelectionButtons[index];
-    currentButton.setImages(sampleSelectionButtonDrawable);
+    currentButton.setImages(normalImage, overImage, downImage);
     currentButton.setBounds((index % halfOfNumSamplesToStore) * buttonWidth, (index / halfOfNumSamplesToStore) * buttonHeight, buttonWidth, buttonHeight);
     sampleSelectionButtonsView.addAndMakeVisible(currentButton);
 }

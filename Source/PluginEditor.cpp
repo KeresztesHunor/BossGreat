@@ -48,11 +48,15 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
     initDrawableRectangleForSampleSelectionButton(overImage, buttonWidth, buttonHeight, MainColours::colour1light);
     juce::DrawableRectangle downImage;
     initDrawableRectangleForSampleSelectionButton(downImage, buttonWidth, buttonHeight, MainColours::colour1lighter);
+    juce::DrawableRectangle normalImageOn;
+    initDrawableRectangleForSampleSelectionButton(normalImageOn, buttonWidth, buttonHeight, MainColours::colour1light);
+    juce::DrawableRectangle overImageOn;
+    initDrawableRectangleForSampleSelectionButton(overImageOn, buttonWidth, buttonHeight, MainColours::colour1lighter);
     for (int i = 0; i < BossGreatAudioProcessor::numSamplesToStore; i++)
     {
         sampleSelectionButtons[i] = new juce::DrawableButton("Sample selection button " + static_cast<juce::String>(i), juce::DrawableButton::ButtonStyle::ImageStretched);
         juce::DrawableButton& currentButton = *sampleSelectionButtons[i];
-        currentButton.setImages(&normalImage, &overImage, &downImage);
+        currentButton.setImages(&normalImage, &overImage, &downImage, nullptr, &normalImageOn, &overImageOn);
         currentButton.setBounds((i % halfOfNumSamplesToStore) * buttonWidth, (i / halfOfNumSamplesToStore) * buttonHeight, buttonWidth, buttonHeight);
         sampleSelectionButtonsView.addAndMakeVisible(currentButton);
     }

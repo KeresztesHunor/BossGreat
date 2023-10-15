@@ -42,21 +42,31 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
     const int buttonWidth = sampleSelectionButtonsView.getWidth() / halfOfNumSamplesToStore;
     const int buttonHeight = sampleSelectionButtonsView.getHeight() / 2;
-    juce::DrawableRectangle normalImage;
-    initDrawableRectangleForSampleSelectionButton(normalImage, buttonWidth, buttonHeight, MainColours::colour1);
-    juce::DrawableRectangle overImage;
-    initDrawableRectangleForSampleSelectionButton(overImage, buttonWidth, buttonHeight, MainColours::colour1light);
-    juce::DrawableRectangle downImage;
-    initDrawableRectangleForSampleSelectionButton(downImage, buttonWidth, buttonHeight, MainColours::colour1lighter);
-    juce::DrawableRectangle normalImageOn;
-    initDrawableRectangleForSampleSelectionButton(normalImageOn, buttonWidth, buttonHeight, MainColours::colour1light);
-    juce::DrawableRectangle overImageOn;
-    initDrawableRectangleForSampleSelectionButton(overImageOn, buttonWidth, buttonHeight, MainColours::colour1lighter);
+    juce::DrawableRectangle normalImageRectangle;
+    initDrawableRectangleForSampleSelectionButton(normalImageRectangle, buttonWidth, buttonHeight, MainColours::colour1);
+    juce::DrawableRectangle overImageRectangle;
+    initDrawableRectangleForSampleSelectionButton(overImageRectangle, buttonWidth, buttonHeight, MainColours::colour1light);
+    juce::DrawableRectangle downImageRectangle;
+    initDrawableRectangleForSampleSelectionButton(downImageRectangle, buttonWidth, buttonHeight, MainColours::colour1lighter);
+    juce::DrawableRectangle normalImageOnRectangle;
+    initDrawableRectangleForSampleSelectionButton(normalImageOnRectangle, buttonWidth, buttonHeight, MainColours::colour1light);
+    juce::DrawableRectangle overImageOnRectangle;
+    initDrawableRectangleForSampleSelectionButton(overImageOnRectangle, buttonWidth, buttonHeight, MainColours::colour1lighter);
     for (int i = 0; i < BossGreatAudioProcessor::numSamplesToStore; i++)
     {
-        sampleSelectionButtons[i] = new juce::DrawableButton("Sample selection button " + static_cast<juce::String>(i), juce::DrawableButton::ButtonStyle::ImageStretched);
+        const juce::String buttonNumberText = static_cast<juce::String>(i + 1);
+        sampleSelectionButtons[i] = new juce::DrawableButton("Sample selection button " + buttonNumberText, juce::DrawableButton::ButtonStyle::ImageStretched);
         juce::DrawableButton& currentButton = *sampleSelectionButtons[i];
-        currentButton.setImages(&normalImage, &overImage, &downImage, nullptr, &normalImageOn, &overImageOn);
+        juce::DrawableText* normalImageText = new juce::DrawableText; // This needs to be allocated to the heap because when the code
+                                                                      // steps out of the for loop's scope, it calls the DrawableComposite's
+                                                                      // destructor which attempts to delete all its child components
+        normalImageText->setFont(juce::Font(buttonHeight), true);
+        normalImageText->setColour(juce::Colours::white);
+        normalImageText->setText(buttonNumberText);
+        juce::DrawableComposite normalImage;
+        //normalImage.addAndMakeVisible(normalImageRectangle); // Temporarily removed to stop crashes for testing
+        normalImage.addAndMakeVisible(normalImageText);
+        currentButton.setImages(&normalImage, &overImageRectangle, &downImageRectangle, nullptr, &normalImageOnRectangle, &overImageOnRectangle);
         currentButton.setBounds((i % halfOfNumSamplesToStore) * buttonWidth, (i / halfOfNumSamplesToStore) * buttonHeight, buttonWidth, buttonHeight);
         sampleSelectionButtonsView.addAndMakeVisible(currentButton);
     }

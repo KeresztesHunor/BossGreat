@@ -43,15 +43,18 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
     const int buttonWidth = sampleSelectionButtonsView.getWidth() / halfOfNumSamplesToStore;
     const int buttonHeight = sampleSelectionButtonsView.getHeight() / 2;
     juce::DrawableRectangle normalImage;
-    initDrawableRectangleForSampleSelectionButton(normalImage, MainColours::colour1, buttonWidth, buttonHeight);
+    initDrawableRectangleForSampleSelectionButton(normalImage, buttonWidth, buttonHeight, MainColours::colour1);
     juce::DrawableRectangle overImage;
-    initDrawableRectangleForSampleSelectionButton(overImage, MainColours::colour1light, buttonWidth, buttonHeight);
+    initDrawableRectangleForSampleSelectionButton(overImage, buttonWidth, buttonHeight, MainColours::colour1light);
     juce::DrawableRectangle downImage;
-    initDrawableRectangleForSampleSelectionButton(downImage, MainColours::colour1lighter, buttonWidth, buttonHeight);
-    for (int i = 0; i < halfOfNumSamplesToStore; i++)
+    initDrawableRectangleForSampleSelectionButton(downImage, buttonWidth, buttonHeight, MainColours::colour1lighter);
+    for (int i = 0; i < BossGreatAudioProcessor::numSamplesToStore; i++)
     {
-        initSampleSelectionButton(i, halfOfNumSamplesToStore, buttonWidth, buttonHeight, &normalImage, &overImage, &downImage);
-        initSampleSelectionButton(i + halfOfNumSamplesToStore, halfOfNumSamplesToStore, buttonWidth, buttonHeight, &normalImage, &overImage, &downImage);
+        sampleSelectionButtons[i] = new juce::DrawableButton("Sample selection button " + static_cast<juce::String>(i), juce::DrawableButton::ButtonStyle::ImageStretched);
+        juce::DrawableButton& currentButton = *sampleSelectionButtons[i];
+        currentButton.setImages(&normalImage, &overImage, &downImage);
+        currentButton.setBounds((i % halfOfNumSamplesToStore) * buttonWidth, (i / halfOfNumSamplesToStore) * buttonHeight, buttonWidth, buttonHeight);
+        sampleSelectionButtonsView.addAndMakeVisible(currentButton);
     }
 
     // Create the waveform display
@@ -124,23 +127,14 @@ void BossGreatAudioProcessorEditor::resized()
 
 void BossGreatAudioProcessorEditor::setRecordButtonText()
 {
-    const std::string state = audioProcessor.getRecordModeIsOn() ? "on" : "off";
+    const juce::String state = audioProcessor.getRecordModeIsOn() ? "on" : "off";
     toggleRecordModeButton.setButtonText("Record mode: " + state);
 }
 
-void BossGreatAudioProcessorEditor::initDrawableRectangleForSampleSelectionButton(juce::DrawableRectangle& drawable, juce::Colour colour, int buttonWidth, int buttonHeight)
+void BossGreatAudioProcessorEditor::initDrawableRectangleForSampleSelectionButton(juce::DrawableRectangle& drawable, int buttonWidth, int buttonHeight, juce::Colour colour)
 {
     drawable.setRectangle(juce::Parallelogram<float>(juce::Rectangle<float>(buttonWidth, buttonHeight)));
     drawable.setFill(juce::FillType(colour));
     drawable.setStrokeFill(juce::FillType(juce::Colours::white));
     drawable.setStrokeThickness(1.f);
-}
-
-void BossGreatAudioProcessorEditor::initSampleSelectionButton(int index, int halfOfNumSamplesToStore, int buttonWidth, int buttonHeight, juce::DrawableRectangle* normalImage, juce::DrawableRectangle* overImage, juce::DrawableRectangle* downImage)
-{
-    sampleSelectionButtons[index] = new juce::DrawableButton("Sample selection button " + static_cast<juce::String>(index), juce::DrawableButton::ButtonStyle::ImageStretched);
-    juce::DrawableButton& currentButton = *sampleSelectionButtons[index];
-    currentButton.setImages(normalImage, overImage, downImage);
-    currentButton.setBounds((index % halfOfNumSamplesToStore) * buttonWidth, (index / halfOfNumSamplesToStore) * buttonHeight, buttonWidth, buttonHeight);
-    sampleSelectionButtonsView.addAndMakeVisible(currentButton);
 }

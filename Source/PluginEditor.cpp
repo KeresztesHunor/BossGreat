@@ -42,55 +42,32 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
     const int buttonWidth = sampleSelectionButtonsView.getWidth() / halfOfNumSamplesToStore;
     const int buttonHeight = sampleSelectionButtonsView.getHeight() / 2;
+    juce::Parallelogram parallelogram(juce::Rectangle<float>(buttonWidth, buttonHeight));
+    juce::DrawableRectangle copyableDrawableRectangle;
+    copyableDrawableRectangle.setRectangle(parallelogram);
+    copyableDrawableRectangle.setStrokeFill(juce::FillType(juce::Colours::white));
+    copyableDrawableRectangle.setStrokeThickness(1.f);
+    juce::DrawableText copyableDrawableText;
+    copyableDrawableText.setBoundingBox(parallelogram);
+    copyableDrawableText.setFont(juce::Font(buttonHeight), true);
+    copyableDrawableText.setJustification(juce::Justification(juce::Justification::centred));
+    copyableDrawableText.setColour(juce::Colours::white);
     for (int i = 0; i < BossGreatAudioProcessor::numSamplesToStore; i++)
     {
         const juce::String buttonNumberText = static_cast<juce::String>(i + 1);
         sampleSelectionButtons[i] = new juce::DrawableButton("Sample selection button " + buttonNumberText, juce::DrawableButton::ButtonStyle::ImageStretched);
         juce::DrawableButton& currentButton = *sampleSelectionButtons[i];
-
-        // These need to be allocated to the heap because when the code
-        // steps out of the for loop's scope, it calls the DrawableComposite's
-        // destructor which attempts to free up all its child components' memory
-
-        juce::Parallelogram parallelogram(juce::Rectangle<float>(buttonWidth, buttonHeight));
-
-        juce::DrawableRectangle* normalImageRectangle = new juce::DrawableRectangle;
-        normalImageRectangle->setRectangle(parallelogram);
-        normalImageRectangle->setFill(MainColours::colour1);
-        normalImageRectangle->setStrokeFill(juce::FillType(juce::Colours::white));
-        normalImageRectangle->setStrokeThickness(1.f);
-        juce::DrawableRectangle* overImageRectangle = initDrawableRectangleForSampleSelectionButton(normalImageRectangle, MainColours::colour1light);
-        juce::DrawableRectangle* downImageRectangle = initDrawableRectangleForSampleSelectionButton(normalImageRectangle, MainColours::colour1lighter);
-        juce::DrawableRectangle* normalImageOnRectangle = initDrawableRectangleForSampleSelectionButton(normalImageRectangle, MainColours::colour1light);
-        juce::DrawableRectangle* overImageOnRectangle = initDrawableRectangleForSampleSelectionButton(normalImageRectangle, MainColours::colour1lighter);
-
-        juce::DrawableText* normalImageText = new juce::DrawableText;
-        normalImageText->setBoundingBox(parallelogram);
-        normalImageText->setFont(juce::Font(buttonHeight), true);
-        normalImageText->setJustification(juce::Justification(juce::Justification::centred));
-        normalImageText->setColour(juce::Colours::white);
-        normalImageText->setText(buttonNumberText);
-        juce::DrawableText* overImageText = new juce::DrawableText(*normalImageText);
-        juce::DrawableText* downImageText = new juce::DrawableText(*normalImageText);
-        juce::DrawableText* normalImageOnText = new juce::DrawableText(*normalImageText);
-        juce::DrawableText* overImageOnText = new juce::DrawableText(*normalImageText);
-
+        copyableDrawableText.setText(buttonNumberText);
         juce::DrawableComposite normalImage;
-        normalImage.addAndMakeVisible(normalImageRectangle);
-        normalImage.addAndMakeVisible(normalImageText);
+        initDrawableCompositeForSampleSelectionButton(normalImage, copyableDrawableRectangle, copyableDrawableText, MainColours::colour1);
         juce::DrawableComposite overImage;
-        overImage.addAndMakeVisible(overImageRectangle);
-        overImage.addAndMakeVisible(overImageText);
+        initDrawableCompositeForSampleSelectionButton(overImage, copyableDrawableRectangle, copyableDrawableText, MainColours::colour1light);
         juce::DrawableComposite downImage;
-        downImage.addAndMakeVisible(downImageRectangle);
-        downImage.addAndMakeVisible(downImageText);
+        initDrawableCompositeForSampleSelectionButton(downImage, copyableDrawableRectangle, copyableDrawableText, MainColours::colour1lighter);
         juce::DrawableComposite normalImageOn;
-        normalImageOn.addAndMakeVisible(normalImageOnRectangle);
-        normalImageOn.addAndMakeVisible(normalImageOnText);
+        initDrawableCompositeForSampleSelectionButton(normalImageOn, copyableDrawableRectangle, copyableDrawableText, MainColours::colour1light);
         juce::DrawableComposite overImageOn;
-        overImageOn.addAndMakeVisible(overImageOnRectangle);
-        overImageOn.addAndMakeVisible(overImageOnText);
-
+        initDrawableCompositeForSampleSelectionButton(overImageOn, copyableDrawableRectangle, copyableDrawableText, MainColours::colour1light);
         currentButton.setImages(&normalImage, &overImage, &downImage, nullptr, &normalImageOn, &overImageOn);
         currentButton.setBounds((i % halfOfNumSamplesToStore) * buttonWidth, (i / halfOfNumSamplesToStore) * buttonHeight, buttonWidth, buttonHeight);
         sampleSelectionButtonsView.addAndMakeVisible(currentButton);
@@ -170,9 +147,10 @@ void BossGreatAudioProcessorEditor::setRecordButtonText()
     toggleRecordModeButton.setButtonText("Record mode: " + state);
 }
 
-juce::DrawableRectangle* BossGreatAudioProcessorEditor::initDrawableRectangleForSampleSelectionButton(juce::DrawableRectangle* copyable, juce::Colour colour)
+void BossGreatAudioProcessorEditor::initDrawableCompositeForSampleSelectionButton(juce::DrawableComposite& drawable, juce::DrawableRectangle& copyableDrawableRectangle, juce::DrawableText& copyableDrawableText, juce::Colour colour)
 {
-    juce::DrawableRectangle* drawable = new juce::DrawableRectangle(*copyable);
-    drawable->setFill(juce::FillType(colour));
-    return drawable;
+    juce::DrawableRectangle* drawableRectangle = new juce::DrawableRectangle(copyableDrawableRectangle);
+    drawableRectangle->setFill(juce::FillType(colour));
+    drawable.addAndMakeVisible(drawableRectangle);
+    drawable.addAndMakeVisible(new juce::DrawableText(copyableDrawableText));
 }

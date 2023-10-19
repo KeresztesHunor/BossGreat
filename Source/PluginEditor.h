@@ -32,7 +32,7 @@ private:
     juce::TextButton toggleRecordModeButton;
     
     void setRecordButtonText();
-    juce::DrawableRectangle* initDrawableRectangleForSampleSelectionButton(juce::DrawableRectangle*, juce::Colour);
+    void initDrawableCompositeForSampleSelectionButton(juce::DrawableComposite&, juce::DrawableRectangle&, juce::DrawableText&, juce::Colour);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessorEditor)
 };

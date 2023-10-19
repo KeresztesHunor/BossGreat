@@ -11,7 +11,7 @@
 class BossGreatAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-    static const int padding { 8 };
+    static const int padding = 8;
 
     BossGreatAudioProcessorEditor(BossGreatAudioProcessor&);
     ~BossGreatAudioProcessorEditor() override;

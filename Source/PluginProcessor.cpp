@@ -257,7 +257,7 @@ bool BossGreatAudioProcessor::getRecordModeIsOn()
     return recordModeIsOn;
 }
 
-SamplePanel& BossGreatAudioProcessor::getSelectedSamplePanel()
+SampleData& BossGreatAudioProcessor::getSelectedSamplePanel()
 {
     return *selectedSamplePanel;
 }

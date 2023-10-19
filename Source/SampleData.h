@@ -2,11 +2,11 @@
 
 #include <JuceHeader.h>
 
-class SamplePanel
+class SampleData
 {
 public:
-	SamplePanel();
-	~SamplePanel();
+	SampleData();
+	~SampleData();
 
 	void clear();
 	void setProcessedSampleBuffer();
@@ -23,5 +23,5 @@ private:
 
 	bool silenceOnAllChannels(juce::AudioBuffer<float>&, int);
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SamplePanel)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SampleData)
 };

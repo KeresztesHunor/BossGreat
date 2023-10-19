@@ -7,6 +7,8 @@
               pluginAUMainType="'aumf'" pluginVSTCategory="kPlugCategEffect">
   <MAINGROUP id="L9V8Fl" name="BossGreat">
     <GROUP id="{13C397FF-2D7B-FF8B-9A34-9C8A61854DA8}" name="Source">
+      <FILE id="diLudg" name="SampleData.cpp" compile="1" resource="0" file="Source/SampleData.cpp"/>
+      <FILE id="fV2Ti2" name="SampleData.h" compile="0" resource="0" file="Source/SampleData.h"/>
       <FILE id="dx8OZK" name="SpectrumView.cpp" compile="1" resource="0"
             file="Source/SpectrumView.cpp"/>
       <FILE id="QuhcQZ" name="SpectrumView.h" compile="0" resource="0" file="Source/SpectrumView.h"/>
@@ -25,8 +27,6 @@
       <FILE id="tZ7keX" name="SamplesPanel.cpp" compile="1" resource="0"
             file="Source/SamplesPanel.cpp"/>
       <FILE id="kBDkEL" name="SamplesPanel.h" compile="0" resource="0" file="Source/SamplesPanel.h"/>
-      <FILE id="BRH5wd" name="SamplePanel.cpp" compile="1" resource="0" file="Source/SamplePanel.cpp"/>
-      <FILE id="wLECEN" name="SamplePanel.h" compile="0" resource="0" file="Source/SamplePanel.h"/>
       <FILE id="QPLD2A" name="WaveFormDisplay.cpp" compile="1" resource="0"
             file="Source/WaveFormDisplay.cpp"/>
       <FILE id="Z4bPFa" name="WaveFormDisplay.h" compile="0" resource="0"

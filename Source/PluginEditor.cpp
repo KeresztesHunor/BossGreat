@@ -42,7 +42,7 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
     const int buttonWidth = sampleSelectionButtonsView.getWidth() / halfOfNumSamplesToStore;
     const int buttonHeight = sampleSelectionButtonsView.getHeight() / 2;
-    juce::Parallelogram parallelogram(juce::Rectangle<float>(buttonWidth, buttonHeight));
+    const juce::Parallelogram parallelogram(juce::Rectangle<float>(buttonWidth, buttonHeight));
     juce::DrawableRectangle copyableDrawableRectangle;
     copyableDrawableRectangle.setRectangle(parallelogram);
     copyableDrawableRectangle.setStrokeFill(juce::FillType(juce::Colours::white));

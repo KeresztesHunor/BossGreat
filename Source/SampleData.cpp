@@ -1,43 +1,43 @@
-#include "SamplePanel.h"
+#include "SampleData.h"
 
-SamplePanel::SamplePanel()
+SampleData::SampleData()
 {
 
 }
 
-SamplePanel::~SamplePanel()
+SampleData::~SampleData()
 {
 
 }
 
-void SamplePanel::clear()
+void SampleData::clear()
 {
 	sampleBuffer.clear();
 	processedSampleBuffer.clear();
 }
 
-void SamplePanel::setProcessedSampleBuffer()
+void SampleData::setProcessedSampleBuffer()
 {
 	processedSampleBuffer = sampleBuffer;
 }
 
-void SamplePanel::processBuffers()
+void SampleData::processBuffers()
 {
 	removeSilence(sampleBuffer);
 	removeSilence(processedSampleBuffer);
 }
 
-juce::AudioBuffer<float>& SamplePanel::getSampleBuffer()
+juce::AudioBuffer<float>& SampleData::getSampleBuffer()
 {
 	return sampleBuffer;
 }
 
-juce::AudioBuffer<float>& SamplePanel::getProcessedSampleBuffer()
+juce::AudioBuffer<float>& SampleData::getProcessedSampleBuffer()
 {
 	return processedSampleBuffer;
 }
 
-void SamplePanel::removeSilence(juce::AudioBuffer<float>& buffer)
+void SampleData::removeSilence(juce::AudioBuffer<float>& buffer)
 {
 	if (buffer.getNumChannels() > 0)
 	{
@@ -50,7 +50,7 @@ void SamplePanel::removeSilence(juce::AudioBuffer<float>& buffer)
 	}
 }
 
-bool SamplePanel::silenceOnAllChannels(juce::AudioBuffer<float>& buffer, int sampleIndex)
+bool SampleData::silenceOnAllChannels(juce::AudioBuffer<float>& buffer, int sampleIndex)
 {
 	int channelIndex = 0;
 	while (channelIndex < buffer.getNumChannels() && buffer.getSample(channelIndex, sampleIndex) == 0)

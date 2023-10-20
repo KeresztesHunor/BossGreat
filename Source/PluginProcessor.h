@@ -46,7 +46,9 @@ public:
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     void toggleRecordMode();
-    void selectSamplePanel(int samplePanelIndex);
+    void selectSampleData(int samplePanelIndex);
+
+    int getSelectedSampleDataIndex();
 
     bool getRecordModeIsOn();
 
@@ -54,14 +56,15 @@ public:
 
 private:
     int numSamplesToRecord { 44100 };
+    int selectedSampleDataIndex;
     int recordingBufferSampleIndex;
 
     double sampleRate { 44100 };
 
     bool recordModeIsOn;
 
-    SampleData* selectedSamplePanel;
-    SampleData samplePanels[numSamplesToStore];
+    SampleData* selectedSampleData;
+    SampleData sampleDatas[numSamplesToStore];
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessor)
 };

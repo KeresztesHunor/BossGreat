@@ -13,12 +13,13 @@ BossGreatAudioProcessor::BossGreatAudioProcessor()
                     )
 #endif
 {
-    selectedSamplePanel = &samplePanels[0];
+    selectedSampleData = &sampleDatas[0];
+    selectedSampleDataIndex = 0;
     recordingBufferSampleIndex = 0;
     recordModeIsOn = false;
     for (int i = 0; i < numSamplesToStore; i++)
     {
-        samplePanels[i].clear();
+        sampleDatas[i].clear();
     }
 }
 
@@ -170,14 +171,14 @@ void BossGreatAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juc
                 int sampleIndex = 0;
                 while (sampleIndex < buffer.getNumSamples() && recordingBufferSampleIndex < numSamplesToRecord)
                 {
-                    for (int channelIndex = 0; channelIndex < selectedSamplePanel->getSampleBuffer().getNumChannels(); channelIndex++)
+                    for (int channelIndex = 0; channelIndex < selectedSampleData->getSampleBuffer().getNumChannels(); channelIndex++)
                     {
-                        selectedSamplePanel->getSampleBuffer().setSample(channelIndex, recordingBufferSampleIndex, channelIndex < buffer.getNumChannels() ? buffer.getSample(channelIndex, sampleIndex) : 0.f);
+                        selectedSampleData->getSampleBuffer().setSample(channelIndex, recordingBufferSampleIndex, channelIndex < buffer.getNumChannels() ? buffer.getSample(channelIndex, sampleIndex) : 0.f);
                     }
                     sampleIndex++;
                     recordingBufferSampleIndex++;
                 }
-                selectedSamplePanel->setProcessedSampleBuffer();
+                selectedSampleData->setProcessedSampleBuffer();
                 recordingBufferUpdatedEvent();
                 if (recordingBufferSampleIndex >= numSamplesToRecord)
                 {
@@ -224,20 +225,20 @@ void BossGreatAudioProcessor::toggleRecordMode()
     recordModeIsOn = !recordModeIsOn;
     if (recordModeIsOn)
     {
-        const int previousNumSamplesInRecordingBuffer = selectedSamplePanel->getSampleBuffer().getNumSamples();
+        const int previousNumSamplesInRecordingBuffer = selectedSampleData->getSampleBuffer().getNumSamples();
         numSamplesToRecord = static_cast<int>(sampleRate); // Currently only 1 second of audio
-        selectedSamplePanel->getSampleBuffer().setSize(2, numSamplesToRecord, true);
+        selectedSampleData->getSampleBuffer().setSize(2, numSamplesToRecord, true);
         if (previousNumSamplesInRecordingBuffer < numSamplesToRecord)
         {
-            for (int channelIndex = 0; channelIndex < selectedSamplePanel->getSampleBuffer().getNumChannels(); channelIndex++)
+            for (int channelIndex = 0; channelIndex < selectedSampleData->getSampleBuffer().getNumChannels(); channelIndex++)
             {
                 for (int sampleIndex = previousNumSamplesInRecordingBuffer; sampleIndex < numSamplesToRecord; sampleIndex++)
                 {
-                    selectedSamplePanel->getSampleBuffer().setSample(channelIndex, sampleIndex, 0.f);
+                    selectedSampleData->getSampleBuffer().setSample(channelIndex, sampleIndex, 0.f);
                 }
             }
         }
-        selectedSamplePanel->setProcessedSampleBuffer();
+        selectedSampleData->setProcessedSampleBuffer();
         recordingBufferUpdatedEvent();
     }
     else
@@ -247,9 +248,15 @@ void BossGreatAudioProcessor::toggleRecordMode()
     recordModeStateChangedEvent();
 }
 
-void BossGreatAudioProcessor::selectSamplePanel(int samplePanelIndex)
+void BossGreatAudioProcessor::selectSampleData(int sampleDataIndex)
 {
-    selectedSamplePanel = &samplePanels[samplePanelIndex];
+    selectedSampleDataIndex = sampleDataIndex;
+    selectedSampleData = &sampleDatas[selectedSampleDataIndex];
+}
+
+int BossGreatAudioProcessor::getSelectedSampleDataIndex()
+{
+    return selectedSampleDataIndex;
 }
 
 bool BossGreatAudioProcessor::getRecordModeIsOn()
@@ -259,5 +266,5 @@ bool BossGreatAudioProcessor::getRecordModeIsOn()
 
 SampleData& BossGreatAudioProcessor::getSelectedSamplePanel()
 {
-    return *selectedSamplePanel;
+    return *selectedSampleData;
 }

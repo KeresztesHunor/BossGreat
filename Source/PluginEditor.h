@@ -33,6 +33,7 @@ private:
     
     void setRecordButtonText();
     void initDrawableCompositeForSampleSelectionButton(juce::DrawableComposite&, juce::DrawableRectangle&, juce::DrawableText&, juce::Colour);
+    void setCurrentlySelectedSamplePanelButtonToggleState(bool);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessorEditor)
 };

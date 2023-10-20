@@ -49,7 +49,7 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
     copyableDrawableRectangle.setStrokeThickness(1.f);
     juce::DrawableText copyableDrawableText;
     copyableDrawableText.setBoundingBox(parallelogram);
-    copyableDrawableText.setFont(juce::Font(buttonHeight), true);
+    copyableDrawableText.setFont(juce::Font("Courier New", buttonHeight, juce::Font::FontStyleFlags::bold), true);
     copyableDrawableText.setJustification(juce::Justification(juce::Justification::centred));
     copyableDrawableText.setColour(juce::Colours::white);
     for (int i = 0; i < BossGreatAudioProcessor::numSamplesToStore; i++)
@@ -68,10 +68,19 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
         initDrawableCompositeForSampleSelectionButton(normalImageOn, copyableDrawableRectangle, copyableDrawableText, MainColours::colour1light);
         juce::DrawableComposite overImageOn;
         initDrawableCompositeForSampleSelectionButton(overImageOn, copyableDrawableRectangle, copyableDrawableText, MainColours::colour1light);
-        currentButton.setImages(&normalImage, &overImage, &downImage, nullptr, &normalImageOn, &overImageOn);
+        currentButton.setImages(&normalImage, &overImage, &downImage, (const juce::Drawable*)nullptr, &normalImageOn, &overImageOn);
         currentButton.setBounds((i % halfOfNumSamplesToStore) * buttonWidth, (i / halfOfNumSamplesToStore) * buttonHeight, buttonWidth, buttonHeight);
         sampleSelectionButtonsView.addAndMakeVisible(currentButton);
+        currentButton.onClick = [this, i]() {
+            if (audioProcessor.getSelectedSampleDataIndex() != i)
+            {
+                setCurrentlySelectedSamplePanelButtonToggleState(false);
+                audioProcessor.selectSampleData(i);
+                setCurrentlySelectedSamplePanelButtonToggleState(true);
+            }
+        };
     }
+    setCurrentlySelectedSamplePanelButtonToggleState(true);
 
     // Create the waveform display
 
@@ -153,4 +162,9 @@ void BossGreatAudioProcessorEditor::initDrawableCompositeForSampleSelectionButto
     drawableRectangle->setFill(juce::FillType(colour));
     drawable.addAndMakeVisible(drawableRectangle);
     drawable.addAndMakeVisible(new juce::DrawableText(copyableDrawableText));
+}
+
+void BossGreatAudioProcessorEditor::setCurrentlySelectedSamplePanelButtonToggleState(bool state)
+{
+    sampleSelectionButtons[audioProcessor.getSelectedSampleDataIndex()]->setToggleState(state, juce::NotificationType::dontSendNotification);
 }

@@ -252,6 +252,7 @@ void BossGreatAudioProcessor::selectSampleData(int sampleDataIndex)
 {
     selectedSampleDataIndex = sampleDataIndex;
     selectedSampleData = &sampleDatas[selectedSampleDataIndex];
+    recordingBufferUpdatedEvent();
 }
 
 int BossGreatAudioProcessor::getSelectedSampleDataIndex()

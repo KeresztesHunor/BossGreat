@@ -7,7 +7,7 @@
 class WaveFormDisplay : public BorderedComponent
 {
 public:
-    static const int gridTemplateRowFr { 3 };
+    static const int gridTemplateRowFr = 3;
 
     WaveFormDisplay(BossGreatAudioProcessor&);
     ~WaveFormDisplay() override;

@@ -141,6 +141,7 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
     juce::DrawableComposite recordButtonNormalImageOn;
     initDrawableCompositeForToggleRecordModeButton(recordButtonNormalImageOn, recordButtonOutline, recordButtonImageRedCircle, juce::FillType(juce::ColourGradient(juce::Colours::white, recordButtonHalfWidth, recordButtonHalfHeight, juce::Colour(0.f, 1.f, 0.75f, 1.f), 0, 0, true)));
     toggleRecordModeButton.setImages(&recordButtonNormalImage, (const juce::Drawable*)nullptr, (const juce::Drawable*)nullptr, (const juce::Drawable*)nullptr, &recordButtonNormalImageOn);
+    toggleRecordModeButton.setColour(juce::DrawableButton::backgroundOnColourId, juce::Colours::transparentBlack);
     controlsPanel.addAndMakeVisible(toggleRecordModeButton);
     setRecordButtonToggleState();
     toggleRecordModeButton.onClick = [&]() {

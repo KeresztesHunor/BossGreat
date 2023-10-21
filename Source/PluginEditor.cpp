@@ -2,7 +2,10 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProcessor& p) : AudioProcessorEditor(&p), audioProcessor(p), waveformDisplay(p)
+BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProcessor& p) : AudioProcessorEditor(&p)
+                                                                                         , audioProcessor(p)
+                                                                                         , waveformDisplay(p)
+                                                                                         , toggleRecordModeButton("Toggle record mode button", juce::DrawableButton::ButtonStyle::ImageStretched)
 {
     // Set plugin size
 
@@ -74,6 +77,10 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
         currentButton.onClick = [this, i]() {
             if (audioProcessor.getSelectedSampleDataIndex() != i)
             {
+                if (audioProcessor.getRecordModeIsOn())
+                {
+                    audioProcessor.toggleRecordMode();
+                }
                 setCurrentlySelectedSamplePanelButtonToggleState(false);
                 audioProcessor.selectSampleData(i);
                 setCurrentlySelectedSamplePanelButtonToggleState(true);
@@ -109,9 +116,33 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
 
     // Create a text button on the controls panel
 
-    toggleRecordModeButton.setBounds(8, 8, 128, 16);
-    setRecordButtonText();
+    toggleRecordModeButton.setBounds(8, 8, 32, 32);
+    const int recordButtonHalfWidth = toggleRecordModeButton.getWidth() / 2;
+    const int recordButtonHalfHeight = toggleRecordModeButton.getHeight() / 2;
+    int redCircleWidth = static_cast<int>(std::round(toggleRecordModeButton.getWidth() * 0.42f));
+    int redCircleHeight = static_cast<int>(std::round(toggleRecordModeButton.getHeight() * 0.42f));
+    if (redCircleWidth % 2 != 0)
+    {
+        redCircleWidth--;
+    }
+    if (redCircleHeight % 2 != 0)
+    {
+        redCircleHeight--;
+    }
+    juce::Path recordButtonOutline;
+    recordButtonOutline.addEllipse(0, 0, toggleRecordModeButton.getWidth(), toggleRecordModeButton.getHeight());
+    juce::Path recordButtonRedCircle;
+    recordButtonRedCircle.addEllipse(recordButtonHalfWidth - redCircleWidth / 2, recordButtonHalfHeight - redCircleHeight / 2, redCircleWidth, redCircleHeight);
+    juce::DrawablePath recordButtonImageRedCircle;
+    recordButtonImageRedCircle.setFill(juce::FillType(juce::Colours::red));
+    recordButtonImageRedCircle.setPath(recordButtonRedCircle);
+    juce::DrawableComposite recordButtonNormalImage;
+    initDrawableCompositeForToggleRecordModeButton(recordButtonNormalImage, recordButtonOutline, recordButtonImageRedCircle, juce::FillType(juce::ColourGradient(juce::Colours::transparentBlack, recordButtonHalfWidth, recordButtonHalfHeight, juce::Colours::black, 0, 0, true)));
+    juce::DrawableComposite recordButtonNormalImageOn;
+    initDrawableCompositeForToggleRecordModeButton(recordButtonNormalImageOn, recordButtonOutline, recordButtonImageRedCircle, juce::FillType(juce::ColourGradient(juce::Colours::white, recordButtonHalfWidth, recordButtonHalfHeight, juce::Colour(0.f, 1.f, 0.75f, 1.f), 0, 0, true)));
+    toggleRecordModeButton.setImages(&recordButtonNormalImage, (const juce::Drawable*)nullptr, (const juce::Drawable*)nullptr, (const juce::Drawable*)nullptr, &recordButtonNormalImageOn);
     controlsPanel.addAndMakeVisible(toggleRecordModeButton);
+    setRecordButtonToggleState();
     toggleRecordModeButton.onClick = [&]() {
         audioProcessor.toggleRecordMode();
     };
@@ -119,7 +150,7 @@ BossGreatAudioProcessorEditor::BossGreatAudioProcessorEditor(BossGreatAudioProce
     //
 
     audioProcessor.recordModeStateChangedEvent = [&]() {
-        setRecordButtonText();
+        setRecordButtonToggleState();
         if (!audioProcessor.getRecordModeIsOn())
         {
             audioProcessor.getSelectedSamplePanel().processBuffers();
@@ -150,10 +181,9 @@ void BossGreatAudioProcessorEditor::resized()
     
 }
 
-void BossGreatAudioProcessorEditor::setRecordButtonText()
+void BossGreatAudioProcessorEditor::setRecordButtonToggleState()
 {
-    const juce::String state = audioProcessor.getRecordModeIsOn() ? "on" : "off";
-    toggleRecordModeButton.setButtonText("Record mode: " + state);
+    toggleRecordModeButton.setToggleState(audioProcessor.getRecordModeIsOn(), juce::NotificationType::dontSendNotification);
 }
 
 void BossGreatAudioProcessorEditor::initDrawableCompositeForSampleSelectionButton(juce::DrawableComposite& drawable, juce::DrawableRectangle& copyableDrawableRectangle, juce::DrawableText& copyableDrawableText, juce::Colour colour)
@@ -162,6 +192,17 @@ void BossGreatAudioProcessorEditor::initDrawableCompositeForSampleSelectionButto
     drawableRectangle->setFill(juce::FillType(colour));
     drawable.addAndMakeVisible(drawableRectangle);
     drawable.addAndMakeVisible(new juce::DrawableText(copyableDrawableText));
+}
+
+void BossGreatAudioProcessorEditor::initDrawableCompositeForToggleRecordModeButton(juce::DrawableComposite& drawable, juce::Path& outline, juce::DrawablePath& redCircle, juce::FillType& fill)
+{
+    juce::DrawablePath* recordButtonImageBackground = new juce::DrawablePath();
+    recordButtonImageBackground->setStrokeFill(juce::FillType(juce::Colours::white));
+    recordButtonImageBackground->setStrokeThickness(1.f);
+    recordButtonImageBackground->setPath(outline);
+    recordButtonImageBackground->setFill(fill);
+    drawable.addAndMakeVisible(recordButtonImageBackground);
+    drawable.addAndMakeVisible(new juce::DrawablePath(redCircle));
 }
 
 void BossGreatAudioProcessorEditor::setCurrentlySelectedSamplePanelButtonToggleState(bool state)

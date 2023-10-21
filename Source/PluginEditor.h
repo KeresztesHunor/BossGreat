@@ -29,10 +29,11 @@ private:
     WaveFormDisplay waveformDisplay;
     SpectrumView spectrumView;
     ControlsPanel controlsPanel;
-    juce::TextButton toggleRecordModeButton;
+    juce::DrawableButton toggleRecordModeButton;
     
-    void setRecordButtonText();
+    void setRecordButtonToggleState();
     void initDrawableCompositeForSampleSelectionButton(juce::DrawableComposite&, juce::DrawableRectangle&, juce::DrawableText&, juce::Colour);
+    void initDrawableCompositeForToggleRecordModeButton(juce::DrawableComposite&, juce::Path&, juce::DrawablePath&, juce::FillType&);
     void setCurrentlySelectedSamplePanelButtonToggleState(bool);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BossGreatAudioProcessorEditor)
